@@ -21,19 +21,54 @@ public class ATM {
 
 
     public void insertCard(Card insertedCard){
-        System.out.println("Enter Pin : ");
+        System.out.println("Welcome to " + bankName);
         String pin;
         do{
+            System.out.print("Enter Pin : ");
             pin = text.nextLine();
             nrOfTries--;
             if(!pin.equals(insertedCard.getCardPin()) && nrOfTries==0){
-                System.out.println("Your card has been blocked");
+                System.out.print("Your card has been blocked");
                 return;
+            } else if(!pin.equals(insertedCard.getCardPin())){
+                System.out.print("Wrong Pin, try again : ");
+                System.out.println("You have " + nrOfTries + " left.Try again:");
             }
         }
         while(!pin.equals(insertedCard.getCardPin()) && nrOfTries > 0 );
         currentCard = insertedCard;
     }
+
+    public void startProcessing() {
+        int chosenOption;
+        do{
+            showMenu();
+            System.out.print("Enter the option you want to select: ");
+            chosenOption = numbers.nextInt();
+            switch (chosenOption) {
+                case 1 -> System.out.println("");
+                case 2 -> System.out.println();
+                case 3 -> System.out.println();
+                case 4 -> System.out.println();
+                case 5 -> System.out.println();
+                case 6 -> System.out.println();
+                default -> System.out.println("Invalid option. Please enter a valid option");
+            }
+        }
+        while (chosenOption != 6);
+    }
+
+    public void showMenu(){
+        System.out.println();
+        System.out.println("-----MENU----");
+        System.out.println("1.Changing PIN");
+        System.out.println("2.Cash Withdrawal");
+        System.out.println("3.Feed Account");
+        System.out.println("4.Check your balance");
+        System.out.println("5.Bill payment");
+        System.out.println("6.Exit");
+        System.out.println();
+        }
 
 
     public String getBankName() {
@@ -78,4 +113,5 @@ public class ATM {
                 ", currentCard=" + currentCard +
                 '}';
     }
+
 }
