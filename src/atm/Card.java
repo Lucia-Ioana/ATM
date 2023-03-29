@@ -1,15 +1,11 @@
 package atm;
 
-import java.util.Scanner;
-
 public class Card {
     private String cardNr;
     private String cvv;
     private String bankName;
     private String cardPin;
     private Account currentAccount;
-
-
 
     public Card(String cardNr, String cvv, String bankName, String cardPin, Account currentAccount) {
         this.cardNr = cardNr;
@@ -18,8 +14,6 @@ public class Card {
         this.cardPin = cardPin;
         this.currentAccount = currentAccount;
     }
-
-
 
     public String getCardNr() {
         return cardNr;
