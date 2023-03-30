@@ -46,7 +46,7 @@ public class ATM {
             switch (chosenOption) {
                 case 1 -> changePin();
                 case 2 -> cashWithdraw();
-                case 3 -> System.out.println();
+                case 3 -> cashDeposit();
                 case 4 -> System.out.println();
                 case 5 -> System.out.println();
                 case 6 -> System.out.println();
@@ -106,6 +106,19 @@ public class ATM {
         } else {
             System.out.println("You have insufficient founds");
         }
+    }
+
+    public void cashDeposit(){
+        showMoneyOptions();
+        System.out.print("Choose an option: ");
+        int selectedOption = numbersScanner.nextInt();
+        int selectedAmount = moneyOperations(selectedOption);
+        if(selectedOption == 0){
+            return;
+        }
+        long newAvailableAmount = currentCard.getCurrentAccount().getAvailableAmount() + MoneyConverterUtils.convertToBani(selectedAmount);
+        currentCard.getCurrentAccount().setAvailableAmount(newAvailableAmount);
+        System.out.println("Your current balance is " + MoneyConverterUtils.convertToRon(newAvailableAmount) + " RON");
     }
 
     public int moneyOperations(int option) {
