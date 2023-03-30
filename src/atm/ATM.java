@@ -47,7 +47,7 @@ public class ATM {
                 case 1 -> changePin();
                 case 2 -> cashWithdraw();
                 case 3 -> cashDeposit();
-                case 4 -> System.out.println();
+                case 4 -> showCurrentBalance();
                 case 5 -> System.out.println();
                 case 6 -> System.out.println();
                 default -> System.out.println("Invalid option. Please enter a valid option");
@@ -62,7 +62,7 @@ public class ATM {
         System.out.println("1.Changing PIN");
         System.out.println("2.Cash Withdrawal");
         System.out.println("3.Feed Account");
-        System.out.println("4.Check your balance");
+        System.out.println("4.Balance");
         System.out.println("5.Bill payment");
         System.out.println("6.Exit");
         System.out.println();
@@ -93,14 +93,18 @@ public class ATM {
         showMoneyOptions();
         System.out.println("Choose an option");
         int selectedOption = numbersScanner.nextInt();
-        int selectedAmount = moneyOperations(selectedOption);
+        double selectedAmount = moneyOperations(selectedOption);
         if(selectedAmount == 0){
             return;
         }
-        if(availableAmountofMoney < MoneyConverterUtils.convertToBani(selectedAmount)){
+        double selectedAmountWithFee = selectedAmount;
+        if(!bankName.equalsIgnoreCase(currentCard.getBankName())){
+           selectedAmountWithFee = selectedAmount + selectedAmount * (fee/100);
+        }
+        if(availableAmountofMoney < MoneyConverterUtils.convertToBani(selectedAmount )){
             System.out.println("ATM doesn't have enough funds");
-        } else if (currentCard.getCurrentAccount().getAvailableAmount() >= MoneyConverterUtils.convertToBani(selectedAmount)) {
-            long calculatedAmount = currentCard.getCurrentAccount().getAvailableAmount() - MoneyConverterUtils.convertToBani(selectedAmount);
+        } else if (currentCard.getCurrentAccount().getAvailableAmount() >= MoneyConverterUtils.convertToBani(selectedAmountWithFee)) {
+            long calculatedAmount = currentCard.getCurrentAccount().getAvailableAmount() - MoneyConverterUtils.convertToBani(selectedAmountWithFee);
             currentCard.getCurrentAccount().setAvailableAmount(calculatedAmount);
             System.out.println("You have " + MoneyConverterUtils.convertToRon(calculatedAmount) + " RON");
         } else {
@@ -119,6 +123,12 @@ public class ATM {
         long newAvailableAmount = currentCard.getCurrentAccount().getAvailableAmount() + MoneyConverterUtils.convertToBani(selectedAmount);
         currentCard.getCurrentAccount().setAvailableAmount(newAvailableAmount);
         System.out.println("Your current balance is " + MoneyConverterUtils.convertToRon(newAvailableAmount) + " RON");
+    }
+
+    public void showCurrentBalance(){
+        double currentBalance = MoneyConverterUtils.convertToRon(currentCard.getCurrentAccount().getAvailableAmount());
+        System.out.println("You have" + currentBalance + " RON");
+
     }
 
     public int moneyOperations(int option) {

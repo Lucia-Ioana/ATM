@@ -24,7 +24,7 @@ public class ATMApp {
         System.out.print("Set card PIN : ");
         String cardPin = text.nextLine();
         Account currentAccount = new Account("RON");
-        System.out.print("Initial amount of money(multiple of 10 RON) : ");
+        System.out.print("Initial amount of money (multiple of 10 RON) : ");
         int initialAmount = numbers.nextInt();
         currentAccount.setAvailableAmount(MoneyConverterUtils.convertToBani(initialAmount));
         Card currentCard = new Card(cardNr, cvv, cardBankName, cardPin, currentAccount);
