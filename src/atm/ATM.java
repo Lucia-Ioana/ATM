@@ -1,5 +1,7 @@
 package atm;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.Scanner;
 
 public class ATM {
@@ -39,6 +41,7 @@ public class ATM {
 
     public void startProcessing() {
         int chosenOption;
+
         do {
             showMenu();
             System.out.print("Enter the option you want to select: ");
@@ -48,12 +51,13 @@ public class ATM {
                 case 2 -> cashWithdraw();
                 case 3 -> cashDeposit();
                 case 4 -> showCurrentBalance();
-                case 5 -> System.out.println();
-                case 6 -> System.out.println();
+                case 5 -> payBill();
+                case 6 -> exitCard();
                 default -> System.out.println("Invalid option. Please enter a valid option");
             }
         }
-        while (chosenOption != 6);
+
+        while (chosenOption != 6 );
     }
 
     public void showMenu() {
@@ -63,7 +67,7 @@ public class ATM {
         System.out.println("2.Cash Withdrawal");
         System.out.println("3.Feed Account");
         System.out.println("4.Balance");
-        System.out.println("5.Bill payment");
+        System.out.println("5.Pay Bill");
         System.out.println("6.Exit");
         System.out.println();
     }
@@ -91,33 +95,33 @@ public class ATM {
 
     public void cashWithdraw() {
         showMoneyOptions();
-        System.out.println("Choose an option");
+        System.out.print("Choose an option: ");
         int selectedOption = numbersScanner.nextInt();
         double selectedAmount = moneyOperations(selectedOption);
-        if(selectedAmount == 0){
+        if (selectedAmount == 0) {
             return;
         }
         double selectedAmountWithFee = selectedAmount;
-        if(!bankName.equalsIgnoreCase(currentCard.getBankName())){
-           selectedAmountWithFee = selectedAmount + selectedAmount * (fee/100);
+        if (!bankName.equalsIgnoreCase(currentCard.getBankName())) {
+            selectedAmountWithFee = selectedAmount + selectedAmount * (fee / 100);
         }
-        if(availableAmountofMoney < MoneyConverterUtils.convertToBani(selectedAmount )){
+        if (availableAmountofMoney < MoneyConverterUtils.convertToBani(selectedAmount)) {
             System.out.println("ATM doesn't have enough funds");
         } else if (currentCard.getCurrentAccount().getAvailableAmount() >= MoneyConverterUtils.convertToBani(selectedAmountWithFee)) {
             long calculatedAmount = currentCard.getCurrentAccount().getAvailableAmount() - MoneyConverterUtils.convertToBani(selectedAmountWithFee);
             currentCard.getCurrentAccount().setAvailableAmount(calculatedAmount);
             System.out.println("You have " + MoneyConverterUtils.convertToRon(calculatedAmount) + " RON");
         } else {
-            System.out.println("You have insufficient founds");
+            System.out.println("You have insufficient funds");
         }
     }
 
-    public void cashDeposit(){
+    public void cashDeposit() {
         showMoneyOptions();
         System.out.print("Choose an option: ");
         int selectedOption = numbersScanner.nextInt();
         int selectedAmount = moneyOperations(selectedOption);
-        if(selectedOption == 0){
+        if (selectedOption == 0) {
             return;
         }
         long newAvailableAmount = currentCard.getCurrentAccount().getAvailableAmount() + MoneyConverterUtils.convertToBani(selectedAmount);
@@ -125,10 +129,31 @@ public class ATM {
         System.out.println("Your current balance is " + MoneyConverterUtils.convertToRon(newAvailableAmount) + " RON");
     }
 
-    public void showCurrentBalance(){
+    public void showCurrentBalance() {
         double currentBalance = MoneyConverterUtils.convertToRon(currentCard.getCurrentAccount().getAvailableAmount());
-        System.out.println("You have" + currentBalance + " RON");
+        System.out.println("You have " + currentBalance + " RON");
+    }
 
+    public void  payBill(){
+        System.out.print("Enter bill number: ");
+        String billNr = textScanner.nextLine();
+        System.out.print("Enter receiver name: ");
+        String receiverName = textScanner.nextLine();
+        System.out.print("Enter the amount requested: ");
+        double amountRequested = numbersScanner.nextDouble();
+        Bill currentBill = new Bill(billNr, receiverName, MoneyConverterUtils.convertToBani(amountRequested));
+        if(currentCard.getCurrentAccount().getAvailableAmount() >= currentBill.getRequestedAmount()){
+           long newBalance = currentCard.getCurrentAccount().getAvailableAmount() - currentBill.getRequestedAmount();
+           currentCard.getCurrentAccount().setAvailableAmount(newBalance);
+            System.out.println("You successfully paid  the " + currentBill + " !");
+            System.out.println("New balance is: " + MoneyConverterUtils.convertToRon(newBalance) + " RON");
+        } else {
+            System.out.println("Insufficient funds to pay the bill. Please withdraw first!");
+        }
+    }
+    public void exitCard() {
+        System.out.println("thank you for choosing us!.  Bye bye");
+        currentCard = null;
     }
 
     public int moneyOperations(int option) {
