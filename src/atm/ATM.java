@@ -93,8 +93,13 @@ public class ATM {
         showMoneyOptions();
         System.out.println("Choose an option");
         int selectedOption = numbersScanner.nextInt();
-        double selectedAmount = moneyOperations(selectedOption);
-        if (currentCard.getCurrentAccount().getAvailableAmount() -MoneyConverterUtils.convertToBani(selectedAmount) >= 0){
+        int selectedAmount = moneyOperations(selectedOption);
+        if(selectedAmount == 0){
+            return;
+        }
+        if(availableAmountofMoney < MoneyConverterUtils.convertToBani(selectedAmount)){
+            System.out.println("ATM doesn't have enough funds");
+        } else if (currentCard.getCurrentAccount().getAvailableAmount() >= MoneyConverterUtils.convertToBani(selectedAmount)) {
             long calculatedAmount = currentCard.getCurrentAccount().getAvailableAmount() - MoneyConverterUtils.convertToBani(selectedAmount);
             currentCard.getCurrentAccount().setAvailableAmount(calculatedAmount);
             System.out.println("You have " + MoneyConverterUtils.convertToRon(calculatedAmount) + " RON");
@@ -106,30 +111,17 @@ public class ATM {
     public int moneyOperations(int option) {
         int selectedAmount = 0;
         switch (option) {
-            case 1:
-                selectedAmount = 10;
-                break;
-            case 2:
-                selectedAmount = 50;
-                break;
-            case 3:
-                selectedAmount = 100;
-                break;
-            case 4:
-                selectedAmount = 200;
-                break;
-            case 5:
-                selectedAmount = 500;
-                break;
-            case 6:
+            case 1 -> selectedAmount = 10;
+            case 2 -> selectedAmount = 50;
+            case 3 -> selectedAmount = 100;
+            case 4 -> selectedAmount = 200;
+            case 5 -> selectedAmount = 500;
+            case 6 -> {
                 System.out.print("Please enter the amount you want to withdraw: ");
                 selectedAmount = numbersScanner.nextInt();
-                break;
-            case 7:
-                break;
-            default:
-                System.out.println("Invalid option! ");
-
+            }
+            case 7 -> selectedAmount = 0;
+            default -> System.out.println("Invalid option! ");
         }
         return selectedAmount;
     }
