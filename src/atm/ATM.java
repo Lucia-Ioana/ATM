@@ -7,9 +7,11 @@ public class ATM {
     private double fee;
     private long availableAmountofMoney;
     private Card currentCard;
+    int nrOfTries = 3;
+
     Scanner textScanner = new Scanner(System.in);
     Scanner numbersScanner = new Scanner(System.in);
-    int nrOfTries = 3;
+
 
     public ATM(String bankName, double fee, long availableAmountofMoney) {
         this.bankName = bankName;
@@ -18,7 +20,7 @@ public class ATM {
     }
 
     public void insertCard(Card insertedCard) {
-        System.out.println("Welcome to " + bankName);
+        System.out.println("Welcome to " + bankName + " !");
         String pin;
         do {
             System.out.print("Enter Pin : ");
@@ -43,7 +45,7 @@ public class ATM {
             chosenOption = numbersScanner.nextInt();
             switch (chosenOption) {
                 case 1 -> changePin();
-                case 2 -> System.out.println();
+                case 2 -> cashWithdraw();
                 case 3 -> System.out.println();
                 case 4 -> System.out.println();
                 case 5 -> System.out.println();
@@ -92,55 +94,57 @@ public class ATM {
         System.out.println("Choose an option");
         int selectedOption = numbersScanner.nextInt();
         double selectedAmount = moneyOperations(selectedOption);
-        if (selectedAmount == 0){
+        if (currentCard.getCurrentAccount().getAvailableAmount() -MoneyConverterUtils.convertToBani(selectedAmount) >= 0){
+            long calculatedAmount = currentCard.getCurrentAccount().getAvailableAmount() - MoneyConverterUtils.convertToBani(selectedAmount);
+            currentCard.getCurrentAccount().setAvailableAmount(calculatedAmount);
+            System.out.println("You have " + MoneyConverterUtils.convertToRon(calculatedAmount) + " RON");
+        } else {
+            System.out.println("You have insufficient founds");
         }
-
     }
 
-    public int moneyOperations(int selectedOption) {
+    public int moneyOperations(int option) {
         int selectedAmount = 0;
-        selectedOption = numbersScanner.nextInt();
-        switch (selectedOption) {
+        switch (option) {
             case 1:
                 selectedAmount = 10;
                 break;
             case 2:
                 selectedAmount = 50;
-
                 break;
             case 3:
                 selectedAmount = 100;
-
                 break;
             case 4:
                 selectedAmount = 200;
-
                 break;
             case 5:
                 selectedAmount = 500;
-
                 break;
             case 6:
-                System.out.print("Please enter amount you want to withdraw: ");
+                System.out.print("Please enter the amount you want to withdraw: ");
                 selectedAmount = numbersScanner.nextInt();
+                break;
+            case 7:
                 break;
             default:
                 System.out.println("Invalid option! ");
-                break;
+
         }
         return selectedAmount;
     }
 
     public void showMoneyOptions() {
-        System.out.println("1.10 RON");
-        System.out.println("2.50 RON");
-        System.out.println("3.100 RON");
-        System.out.println("4.200 RON");
-        System.out.println("5.500 RON");
-        System.out.println("6.Another amount");
-
+        System.out.println("--------------");
+        System.out.println("1. 10 RON");
+        System.out.println("2. 50 RON");
+        System.out.println("3. 100 RON");
+        System.out.println("4. 200 RON");
+        System.out.println("5. 500 RON");
+        System.out.println("6. Other amount");
+        System.out.println("7. EXIT");
+        System.out.println("--------------");
     }
-
 
     public String getBankName() {
         return bankName;
@@ -173,7 +177,6 @@ public class ATM {
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
     }
-
 
     @Override
     public String toString() {

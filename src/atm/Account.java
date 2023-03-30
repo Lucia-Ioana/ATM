@@ -20,4 +20,12 @@ public class Account {
         this.currency = currency;
         this.availableAmount = availableAmount;
     }
+
+    public long getAvailableAmount() {
+        return availableAmount;
+    }
+
+    public void setAvailableAmount(long availableAmount) {
+        this.availableAmount = availableAmount;
+    }
 }

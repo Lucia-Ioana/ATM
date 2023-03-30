@@ -19,14 +19,16 @@ public class ATMApp {
         String cardNr = text.nextLine();
         System.out.print("Enter CVV: ");
         String cvv = text.nextLine();
-        System.out.print("Enter Bank name: ");
+        System.out.print("Enter Bank name of the card: ");
         String cardBankName = text.nextLine();
         System.out.print("Set card PIN : ");
         String cardPin = text.nextLine();
         Account currentAccount = new Account("RON");
+        System.out.print("Initial amount of money(multiple of 10 RON) : ");
+        int initialAmount = numbers.nextInt();
+        currentAccount.setAvailableAmount(MoneyConverterUtils.convertToBani(initialAmount));
         Card currentCard = new Card(cardNr, cvv, cardBankName, cardPin, currentAccount);
         bankAtm.insertCard(currentCard);
-
         if (bankAtm.getCurrentCard() != null) {
             bankAtm.startProcessing();
 
